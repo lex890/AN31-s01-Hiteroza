@@ -1,8 +1,9 @@
 calculator();
 
 function calculator() {
-  let calculation = "";
-  renderCalculator();
+  let calculation = ""; // initialize calculation in string
+  let restartCalculation = false; // to track if the last action was equal operation
+  renderCalculator(); // print the calculator html and regenerate the event listeners
 
   function renderCalculator() {
     const calculatorHtml = `
@@ -14,7 +15,7 @@ function calculator() {
         <div class="calculator-numbers roboto-condensed-numbers">
           <button class="number-buttons">C</button>
           <button class="number-buttons">CE</button>
-          <button class="number-buttons">%</button>
+          <button class="number-buttons">%"></button>
           <button class="number-buttons">7</button>
           <button class="number-buttons">8</button>
           <button class="number-buttons">9</button>
@@ -37,65 +38,71 @@ function calculator() {
         </div>
       </div>`;
 
-    document.querySelector('.calculator-body').innerHTML = calculatorHtml;
+    document.querySelector('.calculator-body').innerHTML = calculatorHtml; // draw the calculator html inside the parent element
 
-    document.querySelectorAll('.number-buttons').forEach((button) => {
+    document.querySelectorAll('.number-buttons').forEach((button) => { // check for clicks of number buttons
       button.addEventListener('click', (event) => {
-        const number = event.target.innerText;
-        updateCalculationScreen(number);
+        const number = event.target.innerText; // get the text within the buttons
+        updateCalculationScreen(number); // process the new String Calculation (handles number)
       });
     });
 
-    document.querySelectorAll('.operator-buttons').forEach((button) => {
+    document.querySelectorAll('.operator-buttons').forEach((button) => { // check for clicks of operations button
       button.addEventListener('click', (event) => {
-        const operator = event.target.innerText;
-        updateCalculationScreen(operator);
+        const operator = event.target.innerText; // get the text within the buttons
+        updateCalculationScreen(operator); // process the new String Calculation (handles operations)
       });
     });
   }
 
   function updateCalculationScreen(value) {
-    const lastValue = calculation.at(-1);
+    const lastValue = calculation.at(-1); // retrieve the last string value for C / CE operations
 
-    if (value === 'C') {
+    if (value === 'C') { // delete the last value either a number or operator
       calculation = calculation.slice(0, -1);
-      updateValue();
+      updateValue(); // save and show on screen
       return; 
     }
 
-    if (value === 'CE') {
+    if (value === 'CE') { // clear the string calculation
       calculation = '';
-      updateValue();
+      updateValue(); // save and show on screen
       return; 
     }
 
-    if (value === '²') {
+    if (value === '²') { // handle squared number
       calculation = String(eval(calculation)) + '**2';
-      updateValue();
+      updateValue(); // save and show on screen
       return;
     }
 
-    if (['+', '-', '*', '/'].includes(lastValue) && ['+', '-', '*', '/'].includes(value)) {
-      // Optionally notify the user about consecutive operators
+    if (['+', '-', '*', '/', '%'].includes(lastValue) && ['+', '-', '*', '/', '%'].includes(value)) { // handle repeat or invalid operator
+      alert('Invalid operation. Please use +, -, *, or /. No repeat operation.');
       return; 
     }
 
-    if (value === '=') {
-      try {
-        calculation = String(eval(calculation)) || ''; 
-      } catch (e) {
-        calculation = ''; 
-        alert('Invalid calculation');
+    if (value === '=') { // end operation and calculate the string calculations using eval()
+      calculation = String(eval(calculation));
+      if (calculation === 'Infinity') { // handles divided by zero 
+        alert('Error: Division by zero is not allowed.');
+        calculation = '0';
       }
-      updateValue();
+      restartCalculation = true; // set resetCalc to true
+      updateValue(); // save and show on screen
       return; 
     }
 
-    calculation += value; 
-    updateValue();
+    if (restartCalculation) { // if the last action was equal, clear the current calculation
+      calculation = value; // start a new calculation
+      restartCalculation = false; // set resetCalc to false
+    } else {
+      calculation += value; // increment the string calculation
+    }
+
+    updateValue(); // save and show on screen
   }
 
   function updateValue() {
-    document.querySelector('.calculator-input').value = calculation || '0'; 
+    document.querySelector('.calculator-input').value = calculation || '0'; // handle early press of equal '='
   }
 }
