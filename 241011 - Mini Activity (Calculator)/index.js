@@ -82,7 +82,7 @@ function calculator() {
     }
 
     if (value === '=') { // end operation and calculate the string calculations using eval()
-      calculation = String(eval(calculation));
+      calculation = String(eval(calculation).toFixed(2)); // I limit the answer to two decimal ^_^
       if (calculation === 'Infinity') { // handles divided by zero 
         alert('Error: Division by zero is not allowed.');
         calculation = '0';
