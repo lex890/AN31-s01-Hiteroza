@@ -11,8 +11,8 @@ const studentGrades = [
 studentGrades.push(["Eve Strohl", [88, 92, 94], "pass"]);
 
 // Step 3
-for (let i = 0; i < studentGrades.length; i++) {
-  const currentArray = studentGrades[i][1];
+studentGrades.forEach((student) => {
+  const currentArray = student[1];
   const totalGrades = currentArray.reduce((totalGrades, currentGrades) => {
     return totalGrades + currentGrades;
   }, 0);
@@ -20,10 +20,31 @@ for (let i = 0; i < studentGrades.length; i++) {
   const averageGrades = totalGrades / currentArray.length; 
   
   if (averageGrades <= 70) {
-    studentGrades[i][2] = 'fail';
+    student[2] = 'fail';
   }
 
-  console.log(`${studentGrades[i][0]} ${averageGrades.toFixed(2)}`);
-};
+  console.log(`${student[0]} ${averageGrades.toFixed(2)}`);
+
+});
+  
+// Step 4
+
+const newStudentGrades = studentGrades.map((student) => {
+  const currentArray = student[1];
+  const totalGrades = currentArray.reduce((totalGrades, currentGrades) => {
+    return totalGrades + currentGrades;
+  }, 0);
+
+  const averageGrades = totalGrades / currentArray.length;
+
+  if (averageGrades <= 70) {
+    student[2] = 'fail';
+  }
+
+  return student;
+});
+
 
 console.log(studentGrades);
+
+console.log(newStudentGrades)
