@@ -19,16 +19,18 @@ studentGrades.forEach((student) => {
 
   const averageGrades = totalGrades / currentArray.length; 
   
+  /* 
   if (averageGrades <= 70) {
-    student[2] = 'fail';
-  }
+      student[2] = 'fail';
+  } 
+  */
+  student[2] = gradingScale(averageGrades);
 
   console.log(`${student[0]} ${averageGrades.toFixed(2)}`);
 
 });
   
 // Step 4
-
 const newStudentGrades = studentGrades.map((student) => {
   const currentArray = student[1];
   const totalGrades = currentArray.reduce((totalGrades, currentGrades) => {
@@ -36,14 +38,17 @@ const newStudentGrades = studentGrades.map((student) => {
   }, 0);
 
   const averageGrades = totalGrades / currentArray.length;
+  const status = gradingScale(averageGrades);
+  // const status = averageGrades <= 70 ? 'fail' : 'pass';
 
-  if (averageGrades <= 70) {
-    student[2] = 'fail';
-  }
-
-  return student;
+  return [student[0], currentArray, status];
 });
 
+// Step 5
+function gradingScale(average) {
+  const status = average < 70 ? 'fail': average <= 85 ? 'pass':'honor pass';
+  return status;
+}
 
 console.log(studentGrades);
 
